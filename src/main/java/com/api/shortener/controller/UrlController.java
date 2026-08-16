@@ -1,7 +1,8 @@
 package com.api.shortener.controller;
 
-import com.api.shortener.controller.dto.ShortenRequest;
-import com.api.shortener.controller.dto.UrlResponse;
+import com.api.shortener.controller.dto.CreateUrlRequestDTO;
+import com.api.shortener.controller.dto.CreateUrlResponseDTO;
+import com.api.shortener.controller.dto.UrlResponseDTO;
 import com.api.shortener.service.UrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -19,17 +20,16 @@ public class UrlController {
     private final UrlService urlService;
 
     @PostMapping("/url")
-    public ResponseEntity<UrlResponse> shortenUrl(@RequestBody ShortenRequest request) {
-        String id = String.valueOf(urlService.shortenUrl(request.url()));
-        return ResponseEntity.ok().body(new UrlResponse(id));
+    public ResponseEntity<CreateUrlResponseDTO> shortenUrl(@RequestBody CreateUrlRequestDTO request) {
+        return ResponseEntity.ok().body(urlService.shortenUrl(request.url()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> redirectToUrl(@PathVariable String id) {
-        String url = urlService.getUrl(Long.valueOf(id));
+        UrlResponseDTO urlResponse = urlService.getUrl(Long.valueOf(id));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(url));
+        headers.setLocation(URI.create(urlResponse.url()));
 
         return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT)
                 .headers(headers)
