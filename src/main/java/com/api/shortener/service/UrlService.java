@@ -17,17 +17,19 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
 
-    public void shortenUrl(String url) {
+    public Long shortenUrl(String url) {
         UrlEntity urlEntity = new UrlEntity();
         urlEntity.setUrl(url);
         urlEntity.setExpiryDate(LocalDateTime.now().plusWeeks(WEEKS_TO_DELETE));
         urlRepository.save(urlEntity);
+
+        return urlEntity.getId();
     }
 
     public String getUrl(Long id) {
         UrlEntity url = urlRepository.findById(id).orElseThrow(() -> new UrlNotFound("There was no url for such id"));
 
-        if(url.getExpiryDate().isAfter(LocalDateTime.now())) {
+        if(LocalDateTime.now().isAfter(url.getExpiryDate())) {
             urlRepository.delete(url);
             throw new UrlNoLongerAvailable("The link is expired");
         }
