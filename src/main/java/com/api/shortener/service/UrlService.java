@@ -1,6 +1,7 @@
 package com.api.shortener.service;
 
 import com.api.shortener.entity.UrlEntity;
+import com.api.shortener.exception.UrlNoLongerAvailable;
 import com.api.shortener.exception.UrlNotFound;
 import com.api.shortener.repository.UrlRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,11 @@ public class UrlService {
 
     public String getUrl(Long id) {
         UrlEntity url = urlRepository.findById(id).orElseThrow(() -> new UrlNotFound("There was no url for such id"));
+
+        if(url.getExpiryDate().isAfter(LocalDateTime.now())) {
+            urlRepository.delete(url);
+            throw new UrlNoLongerAvailable("The link is expired");
+        }
 
         return url.getUrl();
     }

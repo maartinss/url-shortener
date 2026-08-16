@@ -1,6 +1,7 @@
 package com.api.shortener.controller;
 
 import com.api.shortener.exception.UrlException;
+import com.api.shortener.exception.UrlNoLongerAvailable;
 import com.api.shortener.exception.UrlNotFound;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,11 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(UrlNotFound.class)
     public ProblemDetail handleUrlNotFound(UrlNotFound e) {
+        return e.toProblemDetail();
+    }
+
+    @ExceptionHandler(UrlNoLongerAvailable.class)
+    public ProblemDetail handleUrlNoLongerAvailable(UrlNoLongerAvailable e) {
         return e.toProblemDetail();
     }
 }
