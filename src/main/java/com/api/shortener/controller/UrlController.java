@@ -11,6 +11,6 @@ public class UrlController {
 
     @PostMapping("/url")
     public ResponseEntity<?> shortenUrl(@RequestParam String url) {
-
+        return ResponseEntity.ok().build();
     }
 }

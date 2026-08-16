@@ -1,7 +1,9 @@
 package com.api.shortener.repository;
 
+import com.api.shortener.entity.UrlEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UrlRepository {
+public interface UrlRepository extends JpaRepository<UrlEntity, Long> {
 }
