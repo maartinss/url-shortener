@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: db-url
+    volumes:
+      - data:/var/lib/postgresql/db
+    environment:
+      POSTGRES_DB: url
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - '5432:5432'
+volumes:
+  data:
+    external: false
