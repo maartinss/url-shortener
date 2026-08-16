@@ -7,9 +7,7 @@ import com.api.shortener.exception.UrlNoLongerAvailable;
 import com.api.shortener.exception.UrlNotFound;
 import com.api.shortener.repository.UrlRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
