@@ -20,6 +20,8 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
 
+    private final AnalyticsProducerService analyticsService;
+
 
     public CreateUrlResponseDTO shortenUrl(String url) {
         UrlEntity urlEntity = new UrlEntity();
@@ -33,6 +35,8 @@ public class UrlService {
     @Cacheable(value = "URL_CACHE", key = "#id")
     public UrlResponseDTO getUrl(Long id) {
         UrlEntity url = urlRepository.findById(id).orElseThrow(() -> new UrlNotFound("There was no url for such id"));
+
+        analyticsService.sendAnalytics(url, LocalDateTime.now());
 
         if(LocalDateTime.now().isAfter(url.getExpiryDate())) {
             urlRepository.delete(url);

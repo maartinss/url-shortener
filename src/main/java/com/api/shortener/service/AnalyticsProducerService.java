@@ -1,5 +1,6 @@
 package com.api.shortener.service;
 
+import com.api.shortener.controller.dto.UrlAccessEventDTO;
 import com.api.shortener.entity.AnalyticEntity;
 import com.api.shortener.entity.UrlEntity;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,14 @@ public class AnalyticsProducerService {
 
     private static final String TOPIC = "analytics";
 
-    private KafkaTemplate<String, AnalyticEntity>  kafkaTemplate;
+    private final KafkaTemplate<String, UrlAccessEventDTO>  kafkaTemplate;
 
-    public void sendAnalytics(UrlEntity url, LocalDateTime accessedAt) {
-        AnalyticEntity analyticEntity = new AnalyticEntity();
-        analyticEntity.setUrl(url);
-        analyticEntity.setAccessedAt(accessedAt);
+    public void sendAnalytics(Long urlId, LocalDateTime accessedAt) {
+        UrlAccessEventDTO urlAccessEventDTO = new UrlAccessEventDTO(
+                urlId,
+                accessedAt
+        );
 
-        kafkaTemplate.send(TOPIC, analyticEntity);
+        kafkaTemplate.send(TOPIC, String.valueOf(urlId), urlAccessEventDTO);
     }
 }
