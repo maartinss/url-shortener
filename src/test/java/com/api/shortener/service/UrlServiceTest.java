@@ -3,10 +3,12 @@ package com.api.shortener.service;
 import com.api.shortener.controller.dto.CreateUrlResponseDTO;
 import com.api.shortener.controller.dto.UrlResponseDTO;
 import com.api.shortener.entity.UrlEntity;
+import com.api.shortener.exception.UrlNoLongerAvailable;
 import com.api.shortener.repository.UrlRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -56,5 +58,17 @@ public class UrlServiceTest {
 
         assertNotNull(dto);
         assertEquals(expected.getUrl(), dto.url());
+    }
+    
+    @Test
+    public void requestingAnExpiredUrlShouldThrowAnException() {
+        UrlEntity expected = new UrlEntity();
+        expected.setId(MOCK_ID);
+        expected.setUrl(MOCK_URL);
+        expected.setExpiryDate(LocalDateTime.MIN);
+
+        when(urlRepository.findById(MOCK_ID)).thenReturn(Optional.of(expected));
+
+        assertThrows(UrlNoLongerAvailable.class, () -> urlService.getUrl(MOCK_ID));
     }
 }
