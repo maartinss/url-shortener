@@ -4,7 +4,7 @@ services:
     restart: always
     container_name: db-url
     volumes:
-      - data:/var/lib/postgresql/db
+      - data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: url
       POSTGRES_USER: admin
@@ -28,7 +28,6 @@ services:
       - "9092:9092"
     environment:
       KAFKA_NODE_ID: 1
-      NODE_ID: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@localhost:9093'
       KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093'
